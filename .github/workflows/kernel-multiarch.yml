@@ -42,5 +42,5 @@ jobs:
             cd linux-5.10.17
             make mrproper
             wget https://gist.githubusercontent.com/radimkohout/e59440d3a06a763d26e1ca43ce9dd258/raw/b0266d6cbfaa40cf3cdd576d9d4e1e613115f305/.config
-            timeout 1200 make
+            timelimit -q -t 1200 make
             #make modules_install
