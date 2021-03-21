@@ -7,6 +7,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    environment: manual
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     name: Build on ${{ matrix.arch }}
@@ -26,6 +27,13 @@ jobs:
             distro: buster
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Restore cache
+        uses: actions/cache@v2
+        with:
+          path: |
+           linux-5.10.17-${{ matrix.arch }}
+          key: $GITHUB_TOKEN
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: uraimo/run-on-arch-action@v2.0.5
         name: Prepare
@@ -33,14 +41,28 @@ jobs:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
           shell: /bin/sh
+          dockerRunArgs: |
+           --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
           install: |
             apt-get update
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit
-          run: |
             wget https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.17.tar.xz
             tar -xvf linux-5.10.17.tar.xz
-            cd linux-5.10.17
+            mv linux-5.10.17  linux-5.10.17-${{ matrix.arch }}
+            cd linux-5.10.17-${{ matrix.arch }}
             make mrproper
             wget https://gist.githubusercontent.com/radimkohout/e59440d3a06a763d26e1ca43ce9dd258/raw/b0266d6cbfaa40cf3cdd576d9d4e1e613115f305/.config
+      - uses: uraimo/run-on-arch-action@v2.0.5
+        name: Make 1 - ${{ matrix.arch }}
+        with: 
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
+          shell: /bin/sh
+          dockerRunArgs: |
+           --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
+          install: |
+            apt-get update
+            apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit
+            cd linux-5.10.17-${{ matrix.arch }}
+          run: |
             timelimit -q -t 1200 make
-            #make modules_install
