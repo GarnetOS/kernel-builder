@@ -35,7 +35,7 @@ jobs:
           shell: /bin/sh
           install: |
             apt-get update
-            apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential
+            apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential time limit
           run: |
             wget https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.17.tar.xz
             tar -xvf linux-5.10.17.tar.xz
