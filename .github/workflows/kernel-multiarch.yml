@@ -28,11 +28,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Restore cache
-        uses: actions/cache@v2
         with:
           path: |
            linux-5.10.17-${{ matrix.arch }}
-          key: ${{ secrets.TOKEN }}
+          key: kernel - ${{ matrix.arch }}
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: uraimo/run-on-arch-action@v2.0.5
