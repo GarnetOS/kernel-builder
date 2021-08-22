@@ -66,8 +66,8 @@ jobs:
           install: |
             apt-get update
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit
-            cd linux-5.10.17-${{ matrix.arch }}
           run: |
+            cd linux-5.10.17-${{ matrix.arch }}
             timelimit -q -t 1200 make || true
             
       - uses: uraimo/run-on-arch-action@v2.0.5
