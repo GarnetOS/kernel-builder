@@ -46,14 +46,13 @@ jobs:
           install: |
             apt-get update
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit
+          run: |
             wget https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.17.tar.xz
             tar -xvf linux-5.10.17.tar.xz
             mv linux-5.10.17  linux-5.10.17-${{ matrix.arch }}
             cd linux-5.10.17-${{ matrix.arch }}
             make mrproper
             wget https://gist.githubusercontent.com/radimkohout/e59440d3a06a763d26e1ca43ce9dd258/raw/b0266d6cbfaa40cf3cdd576d9d4e1e613115f305/.config
-          run: |
-           ls > ls.txt
            
       - uses: uraimo/run-on-arch-action@v2.0.5
         name: Make 1 - ${{ matrix.arch }}
