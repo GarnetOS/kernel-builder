@@ -39,6 +39,8 @@ jobs:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
           shell: /bin/sh
+          setup: |
+            mkdir -p "${PWD}/linux-5.10.17-${{ matrix.arch }}"
           dockerRunArgs: |
            --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
           install: |
