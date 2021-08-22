@@ -27,7 +27,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/cache@v2.1.6
-      - name: Restore cache
+        name: Restore cache
         with:
           path: linux-5.10.17-${{ matrix.arch }}
           key: kernel - ${{ matrix.arch }}
