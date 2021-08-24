@@ -131,7 +131,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
-                sudo tar -zcf ${{ matrix.pack }} -C chroot .
+                sudo tar -zcf linux-5.10.17-${{ matrix.arch }}.tar.gz linux-5.10.17-${{ matrix.arch }}
                 mkdir out
                 cp ${{ matrix.pack }} ./out/
                 gh release upload v1.0 ${{ matrix.pack }} -R GarnetOS/packages
