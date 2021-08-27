@@ -133,5 +133,5 @@ jobs:
         run: |
                 sudo tar -zcf linux-5.10.17-${{ matrix.arch }}.tar.gz linux-5.10.17-${{ matrix.arch }}
                 mkdir out
-                cp ${{ matrix.pack }} ./out/
-                gh release upload v1.0 ${{ matrix.pack }} -R GarnetOS/packages
+                cp ${{ matrix.arch }}.tar.gz ./out/
+                gh release upload v1.0 ${{ matrix.arch }}.tar.gz -R GarnetOS/kernel-builder
