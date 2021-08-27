@@ -68,7 +68,7 @@ jobs:
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
           run: |
             cd linux-5.10.17-${{ matrix.arch }}
-            (printf "1\n" | timelimit -q -t 350m make) || true
+            (printf "1\n" | timelimit -q -t 21000 make) || true
             
       - uses: uraimo/run-on-arch-action@v2.0.5
         name: Make 2 - ${{ matrix.arch }}
@@ -83,7 +83,7 @@ jobs:
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
           run: |
             cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 350m make || true         
+            timelimit -q -t 21000 make || true         
       - uses: uraimo/run-on-arch-action@v2.0.5
         name: Make 3 - ${{ matrix.arch }}
         with: 
@@ -97,7 +97,7 @@ jobs:
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
           run: |
             cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 350m make || true
+            timelimit -q -t 21000 make || true
       - uses: uraimo/run-on-arch-action@v2.0.5
         name: Make 4 - ${{ matrix.arch }}
         with: 
@@ -111,7 +111,7 @@ jobs:
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
           run: |
             cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 350m make || true         
+            timelimit -q -t 21000 make || true         
       - uses: uraimo/run-on-arch-action@v2.0.5
         name: Make 5 - ${{ matrix.arch }}
         with: 
@@ -125,12 +125,12 @@ jobs:
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
           run: |
             cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 350m make || true         
+            timelimit -q -t 21000 make || true         
       - name: Upload
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
                 sudo tar -zcf linux-5.10.17-${{ matrix.arch }}.tar.gz linux-5.10.17-${{ matrix.arch }}
                 mkdir out
-                cp ${{ matrix.arch }}.tar.gz ./out/
+                cp linux-5.10.17-${{ matrix.arch }}.tar.gz ./out/
                 gh release upload v1.0 ${{ matrix.arch }}.tar.gz -R GarnetOS/kernel-builder
