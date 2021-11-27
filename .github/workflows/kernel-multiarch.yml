@@ -25,7 +25,7 @@ jobs:
           key: kernel - ${{ matrix.arch }}
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: uraimo/run-on-arch-action@v2.0.5
+      - uses: GarnetOS/run-on-arch-action@v2.1.2
         name: Prepare
         with: 
           arch: ${{ matrix.arch }}
