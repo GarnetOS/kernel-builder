@@ -64,7 +64,7 @@ jobs:
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
           run: |
             cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 120 make) || true
+            timelimit -q -t 120 make || true
             
       - uses: GarnetOS/run-on-arch-action@v2.1.2
         name: Make 2 - ${{ matrix.arch }}
