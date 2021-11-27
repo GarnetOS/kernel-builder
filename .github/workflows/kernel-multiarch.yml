@@ -2,9 +2,7 @@ on:
   workflow_dispatch:
   
 name: Kernel
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
     environment: manual
     # The type of runner that the job will run on
@@ -13,17 +11,11 @@ jobs:
 
     strategy:
       matrix:
-        include:
-          - arch: aarch64
-            distro: buster
-          - arch: ppc64le
-            distro: buster
-          - arch: s390x
-            distro: buster
-          - arch: armv6
-            distro: buster
-          - arch: armv7
-            distro: buster
+          arch: [armv6,armv7,aarch64,amd64,s390x,ppc64le,mips64le,i386]
+          distro: [bullseye]
+          include:
+            - arch: riscv64
+              distro: unstable
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/cache@v2.1.6
@@ -68,64 +60,7 @@ jobs:
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
           run: |
             cd linux-5.10.17-${{ matrix.arch }}
-            (printf "1\n" | timelimit -q -t 21000 make) || true
-            
-      - uses: uraimo/run-on-arch-action@v2.0.5
-        name: Make 2 - ${{ matrix.arch }}
-        with: 
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.distro }}
-          shell: /bin/sh
-          dockerRunArgs: |
-           --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
-          install: |
-            apt-get update
-            apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
-          run: |
-            cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 21000 make || true         
-      - uses: uraimo/run-on-arch-action@v2.0.5
-        name: Make 3 - ${{ matrix.arch }}
-        with: 
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.distro }}
-          shell: /bin/sh
-          dockerRunArgs: |
-           --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
-          install: |
-            apt-get update
-            apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
-          run: |
-            cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 21000 make || true
-      - uses: uraimo/run-on-arch-action@v2.0.5
-        name: Make 4 - ${{ matrix.arch }}
-        with: 
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.distro }}
-          shell: /bin/sh
-          dockerRunArgs: |
-           --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
-          install: |
-            apt-get update
-            apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
-          run: |
-            cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 21000 make || true         
-      - uses: uraimo/run-on-arch-action@v2.0.5
-        name: Make 5 - ${{ matrix.arch }}
-        with: 
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.distro }}
-          shell: /bin/sh
-          dockerRunArgs: |
-           --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
-          install: |
-            apt-get update
-            apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
-          run: |
-            cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 21000 make || true         
+            (printf "1\n" | timelimit -q -t 210 make) || true
       - name: Upload
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
