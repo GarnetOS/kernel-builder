@@ -34,7 +34,7 @@ jobs:
           distro: ${{ matrix.distro }}
           shell: /bin/sh
           setup: |
-            rm -r "${PWD}/linux-5.10.17-${{ matrix.arch }}"
+            rm -r "${PWD}/linux-5.10.17-${{ matrix.arch }}" || true
             mkdir -p "${PWD}/linux-5.10.17-${{ matrix.arch }}"
           dockerRunArgs: |
            --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
