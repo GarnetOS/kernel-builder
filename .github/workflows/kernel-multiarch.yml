@@ -64,7 +64,7 @@ jobs:
             timelimit -q -t 1200 make || true
       - name: Post process
         run: |
-             chmod -R +r linux-5.10.17-${{ matrix.arch }}
+             sudo chmod -R +r linux-5.10.17-${{ matrix.arch }}
              find . ! -readable
              zip -q -r kernel-${{ matrix.arch }}.zip linux-5.10.17-${{ matrix.arch }}
       - uses: actions/upload-artifact@v2
