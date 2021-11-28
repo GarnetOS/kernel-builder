@@ -20,36 +20,36 @@ jobs:
               distro: unstable
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      #- name: Download artifact
-      #  uses: GarnetOS/action-download-artifact@test10
-      #  with:
-      #    workflow: kernel-multiarch.yml
-      #    name: kernel-out-${{ matrix.arch }}
-      #- name: Unzip
-      #  run: |
-      #      unzip kernel-${{ matrix.arch }}.zip
-      - uses: GarnetOS/run-on-arch-action@v2.1.2
-        name: Prepare
-        with: 
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.distro }}
-          shell: /bin/sh
-          setup: |
-            mkdir -p "${PWD}/linux-5.10.17-${{ matrix.arch }}"
-          dockerRunArgs: |
-           --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
-          install: |
-            apt-get update
-            apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
-          run: |
-            wget https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.17.tar.xz
-            tar -xf linux-5.10.17.tar.xz
-            mv linux-5.10.17/*  linux-5.10.17-${{ matrix.arch }}/
-            cd linux-5.10.17-${{ matrix.arch }}
-            ls
-            make mrproper
+      - name: Download artifact
+        uses: GarnetOS/action-download-artifact@test10
+        with:
+          workflow: kernel-multiarch.yml
+          name: kernel-out-${{ matrix.arch }}
+      - name: Unzip
+        run: |
+            unzip kernel-${{ matrix.arch }}.zip
+      #- uses: GarnetOS/run-on-arch-action@v2.1.2
+      #  name: Prepare
+      #  with: 
+      #    arch: ${{ matrix.arch }}
+      #    distro: ${{ matrix.distro }}
+      #    shell: /bin/sh
+      #    setup: |
+      #      mkdir -p "${PWD}/linux-5.10.17-${{ matrix.arch }}"
+      #    dockerRunArgs: |
+      #     --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
+      #    install: |
+      #      apt-get update
+      #      apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
+      #    run: |
+      #      wget https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.17.tar.xz
+      #      tar -xf linux-5.10.17.tar.xz
+      #      mv linux-5.10.17/*  linux-5.10.17-${{ matrix.arch }}/
+      #      cd linux-5.10.17-${{ matrix.arch }}
+      #      ls
+      #      make mrproper
             #wget https://gist.githubusercontent.com/radimkohout/e59440d3a06a763d26e1ca43ce9dd258/raw/b0266d6cbfaa40cf3cdd576d9d4e1e613115f305/.config
-            make defconfig
+      #      make defconfig
            
       - uses: GarnetOS/run-on-arch-action@v2.1.2
         name: Make - ${{ matrix.arch }}
@@ -64,7 +64,7 @@ jobs:
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
           run: |
             cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 30 make || true
+            timelimit -q -t 18900 make || true
       - name: Post process
         run: |
              sudo chmod -R +r linux-5.10.17-${{ matrix.arch }}
