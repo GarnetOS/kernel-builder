@@ -20,12 +20,11 @@ jobs:
               distro: unstable
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/cache@v2.1.6
-        name: Restore cache
-        with:
-          path: linux-5.10.17-${{ matrix.arch }}
-          key: kernel - ${{ matrix.arch }}
-
+      #- name: Download artifact
+      #  uses: GarnetOS/action-download-artifact@test10
+      #  with:
+      #    workflow: kernel-multiarch.yml
+      #    name: kernel-${{ matrix.arch }}
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: GarnetOS/run-on-arch-action@v2.1.2
         name: Prepare
@@ -34,7 +33,6 @@ jobs:
           distro: ${{ matrix.distro }}
           shell: /bin/sh
           setup: |
-            rm -r "${PWD}/linux-5.10.17-${{ matrix.arch }}" || true
             mkdir -p "${PWD}/linux-5.10.17-${{ matrix.arch }}"
           dockerRunArgs: |
            --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
@@ -64,19 +62,9 @@ jobs:
             apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
           run: |
             cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 120 make || true
+            timelimit -q -t 18900 make || true
+      - uses: actions/upload-artifact@v2
+        with:
+          name: kernel-${{ matrix.arch }}
+          path: linux-5.10.17-${{ matrix.arch }}
             
-      - uses: GarnetOS/run-on-arch-action@v2.1.2
-        name: Make 2 - ${{ matrix.arch }}
-        with: 
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.distro }}
-          shell: /bin/sh
-          dockerRunArgs: |
-           --volume "${PWD}/linux-5.10.17-${{ matrix.arch }}:/linux-5.10.17-${{ matrix.arch }}"
-          install: |
-            apt-get update
-            apt-get install -y libncurses-dev sudo wget xz-utils gcc g++ make flex bison libssl-dev libelf-dev build-essential timelimit bc kmod cpio 
-          run: |
-            cd linux-5.10.17-${{ matrix.arch }}
-            timelimit -q -t 120 make
